@@ -64,7 +64,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-slate-950 flex flex-col px-4 py-6">
+    <div className="min-h-screen bg-slate-950 flex flex-col px-4 py-6" style={{ minHeight: '100dvh' }}>
       <div className="max-w-sm mx-auto w-full flex flex-col flex-1">
         {/* Progress */}
         <div className="mb-8">

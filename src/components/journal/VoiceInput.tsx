@@ -10,11 +10,9 @@ export default function VoiceInput({ onTranscript }: VoiceInputProps) {
   const { state, transcript, interimTranscript, isSupported, startListening, stopListening, reset } = useVoiceInput()
 
   if (!isSupported) {
-    return (
-      <p className="text-xs text-slate-500 mt-2">
-        Voice input not supported in this browser. Try Chrome or Safari.
-      </p>
-    )
+    // Voice input works on: Chrome (Android + Desktop), Edge, Safari (iOS 14.5+)
+    // Not supported on: Firefox. Falls back gracefully to text-only.
+    return null
   }
 
   const handleUse = () => {

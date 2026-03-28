@@ -46,7 +46,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-slate-950 flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center px-4" style={{ minHeight: '100dvh' }}>
       <div className="w-full max-w-sm fade-in">
         {/* Logo */}
         <div className="text-center mb-8">

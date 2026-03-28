@@ -16,7 +16,12 @@ body {
   color: #f1f5f9;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* Viewport height: 100vh fallback → dvh for modern browsers (accounts for mobile browser bars) */
+  min-height: 100vh;
   min-height: 100dvh;
+  /* Prevent text resize on iOS orientation change */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 ::-webkit-scrollbar { width: 4px; }
