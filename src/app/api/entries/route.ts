@@ -1,6 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
+// Bug fix: allow up to 60s for this route (Claude API calls can take 15-30s)
+export const maxDuration = 60
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()
@@ -9,20 +12,27 @@ export async function POST(request: NextRequest) {
 
     const { sessionId, answers, moodScore, complete } = await request.json()
 
-    // Upsert entries for each answer
+    // Bug fix: delete + insert instead of upsert (avoids needing a DB unique constraint)
     for (const answer of answers) {
       if (!answer.text?.trim()) continue
 
       const wordCount = answer.text.trim().split(/\s+/).length
 
-      await supabase.from('journal_entries').upsert({
+      // Remove any existing answer for this question in this session, then insert fresh
+      await supabase
+        .from('journal_entries')
+        .delete()
+        .eq('question_id', answer.questionId)
+        .eq('session_id', sessionId)
+
+      await supabase.from('journal_entries').insert({
         session_id: sessionId,
         question_id: answer.questionId,
         user_id: user.id,
         response_text: answer.text,
         input_method: answer.inputMethod ?? 'text',
         word_count: wordCount,
-      }, { onConflict: 'question_id,user_id' })
+      })
     }
 
     // Update session with mood and completion

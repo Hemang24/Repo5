@@ -3,6 +3,9 @@ import { anthropic } from '@/lib/claude/client'
 import { buildQuestionPrompt } from '@/lib/claude/prompts'
 import { NextRequest, NextResponse } from 'next/server'
 
+// Allow up to 60s — Claude API calls can take 15-30s
+export const maxDuration = 60
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()

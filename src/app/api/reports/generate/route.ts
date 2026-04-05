@@ -3,6 +3,9 @@ import { anthropic } from '@/lib/claude/client'
 import { buildReportPrompt } from '@/lib/claude/prompts'
 import { NextRequest, NextResponse } from 'next/server'
 
+// Allow up to 60s — report generation can take 20-30s
+export const maxDuration = 60
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()

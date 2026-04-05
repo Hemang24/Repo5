@@ -26,32 +26,36 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   const path = request.nextUrl.pathname
-  const isProtected = path.startsWith('/journal') || path.startsWith('/reports') || path.startsWith('/settings') || path.startsWith('/onboarding')
+  const isProtected = path.startsWith('/journal') || path.startsWith('/reports') || path.startsWith('/settings')
   const isAuthPage = path.startsWith('/auth')
+  const isOnboarding = path.startsWith('/onboarding')
 
-  // Not logged in, trying to access protected route
-  if (!user && isProtected) {
+  // Not logged in → send to login
+  if (!user && (isProtected || isOnboarding)) {
     return NextResponse.redirect(new URL('/auth/login', request.url))
   }
 
-  // Logged in, trying to access auth pages
+  // Logged in → redirect away from auth pages
   if (user && isAuthPage) {
     return NextResponse.redirect(new URL('/journal', request.url))
   }
 
-  // Logged in at root, redirect to journal
-  if (user && path === '/') {
-    // Check onboarding status
+  // Logged in → enforce onboarding for ALL protected routes, not just root
+  if (user && (isProtected || path === '/')) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('onboarding_completed')
       .eq('id', user.id)
       .single()
 
-    if (profile && !profile.onboarding_completed) {
+    if (profile && !profile.onboarding_completed && !isOnboarding) {
       return NextResponse.redirect(new URL('/onboarding', request.url))
     }
-    return NextResponse.redirect(new URL('/journal', request.url))
+
+    // At root with onboarding done → go to journal
+    if (path === '/') {
+      return NextResponse.redirect(new URL('/journal', request.url))
+    }
   }
 
   return supabaseResponse

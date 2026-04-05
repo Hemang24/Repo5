@@ -7,7 +7,7 @@ import QuestionCard from '@/components/journal/QuestionCard'
 import MoodSelector from '@/components/journal/MoodSelector'
 import Button from '@/components/ui/Button'
 import ProgressBar from '@/components/ui/ProgressBar'
-import { getTodayString, getGreeting, getMoodEmoji } from '@/lib/utils/date'
+import { getTodayString, getGreeting, getMoodEmoji, getMoodLabel } from '@/lib/utils/date'
 import type { JournalQuestion, JournalSession, Profile } from '@/types'
 
 type PageState = 'loading' | 'generating' | 'journaling' | 'mood' | 'done' | 'already_done' | 'error'
@@ -128,6 +128,14 @@ export default function JournalPage() {
         body: JSON.stringify({ sessionId: session.id, answers: answersArr, moodScore, complete: true }),
       })
       if (!res.ok) throw new Error((await res.json()).error)
+
+      // Bug fix: re-fetch profile so streak count reflects the DB trigger update
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: updatedProfile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+        if (updatedProfile) setProfile(updatedProfile)
+      }
+
       setPageState('done')
     } catch (e: any) {
       setError(e.message)
@@ -233,7 +241,7 @@ export default function JournalPage() {
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-left space-y-2">
               <p className="text-sm text-slate-400">Today's entry</p>
               <p className="text-slate-100">{answeredCount} question{answeredCount !== 1 ? 's' : ''} answered</p>
-              {moodScore && <p className="text-slate-100">Mood: {getMoodEmoji(moodScore)} {moodScore}/8</p>}
+              {moodScore && <p className="text-slate-100">Mood: {getMoodEmoji(moodScore)} {getMoodLabel(moodScore)}</p>}
             </div>
             <div className="space-y-3">
               <Button fullWidth variant="secondary" onClick={() => window.location.href = '/reports'}>
