@@ -49,6 +49,10 @@ export function IntakeWizard() {
     setUploadedFiles(prev => ({ ...prev, [key]: file }))
   }
 
+  function handleOcrText(key: string, rawText: string) {
+    setOcrTexts(prev => ({ ...prev, [key]: rawText }))
+  }
+
   async function handleNext() {
     const fieldsToValidate: Record<number, (keyof IntakeFormData)[]> = {
       0: ['demographics'],
@@ -125,8 +129,8 @@ export function IntakeWizard() {
         {/* Step content */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="bg-white rounded-2xl border border-warm-200 shadow-sm p-5 sm:p-7 mb-6">
-            {step === 0 && <StepDemographics onFileUploaded={handleFileUploaded} />}
-            {step === 1 && <StepInsurance onFileUploaded={handleFileUploaded} />}
+            {step === 0 && <StepDemographics onFileUploaded={handleFileUploaded} onOcrText={handleOcrText} />}
+            {step === 1 && <StepInsurance onFileUploaded={handleFileUploaded} onOcrText={handleOcrText} />}
             {step === 2 && <StepMedicalHistory />}
             {step === 3 && <StepConsent />}
           </div>

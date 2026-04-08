@@ -9,6 +9,7 @@ import { translations } from '@/lib/translations'
 interface ImageUploadOCRProps {
   label: string
   hint?: string
+  mode?: 'id' | 'insurance'
   onExtracted: (fields: Record<string, string>, rawText: string) => void
   onFileSelected: (dataUrl: string, mimeType: string) => void
   accept?: Record<string, string[]>
@@ -17,6 +18,7 @@ interface ImageUploadOCRProps {
 export function ImageUploadOCR({
   label,
   hint,
+  mode,
   onExtracted,
   onFileSelected,
   accept,
@@ -53,7 +55,7 @@ export function ImageUploadOCR({
         const response = await fetch('/api/ocr', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ base64, mimeType }),
+          body: JSON.stringify({ base64, mimeType, mode }),
         })
 
         if (!response.ok) {
@@ -69,7 +71,7 @@ export function ImageUploadOCR({
         setStatus('error')
       }
     }
-  }, [onExtracted, onFileSelected])
+  }, [onExtracted, onFileSelected, mode])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

@@ -1,4 +1,6 @@
-import { CheckCircle, Phone, Calendar } from 'lucide-react'
+'use client'
+
+import { CheckCircle, Phone } from 'lucide-react'
 import Link from 'next/link'
 import { useLanguage } from '@/lib/language-context'
 import { translations } from '@/lib/translations'

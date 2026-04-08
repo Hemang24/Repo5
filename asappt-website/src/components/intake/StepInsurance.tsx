@@ -8,6 +8,7 @@ import type { IntakeFormData, UploadedFile } from '@/types/intake'
 
 interface Props {
   onFileUploaded: (key: string, file: UploadedFile) => void
+  onOcrText: (key: string, rawText: string) => void
 }
 
 const INSURANCE_PROVIDERS = [
@@ -26,16 +27,17 @@ const INSURANCE_PROVIDERS = [
   'Other',
 ]
 
-export function StepInsurance({ onFileUploaded }: Props) {
+export function StepInsurance({ onFileUploaded, onOcrText }: Props) {
   const { register, setValue, formState: { errors } } = useFormContext<IntakeFormData>()
   const { lang } = useLanguage()
   const intake = translations[lang].intake
 
-  function handleFrontExtracted(fields: Record<string, string>) {
+  function handleFrontExtracted(fields: Record<string, string>, rawText: string) {
     if (fields.memberId) setValue('insurance.memberId', fields.memberId)
     if (fields.groupNumber) setValue('insurance.groupNumber', fields.groupNumber)
     if (fields.subscriberName) setValue('insurance.subscriberName', fields.subscriberName)
     if (fields.providerName) setValue('insurance.providerName', fields.providerName)
+    onOcrText('insuranceFront', rawText)
   }
 
   const fieldClass = 'w-full px-3 py-2.5 text-sm bg-white border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-warm-400 focus:border-transparent placeholder:text-brown-200'
@@ -48,6 +50,7 @@ export function StepInsurance({ onFileUploaded }: Props) {
         <div className="bg-warm-50 border border-warm-200 rounded-xl p-4">
           <ImageUploadOCR
             label={intake.uploadInsuranceFront}
+            mode="insurance"
             onExtracted={handleFrontExtracted}
             onFileSelected={(b64, mime) => onFileUploaded('insuranceFront', { name: 'insurance_front', dataUrl: b64, type: mime })}
           />
@@ -55,7 +58,8 @@ export function StepInsurance({ onFileUploaded }: Props) {
         <div className="bg-warm-50 border border-warm-200 rounded-xl p-4">
           <ImageUploadOCR
             label={intake.uploadInsuranceBack}
-            onExtracted={() => {}}
+            mode="insurance"
+            onExtracted={(_, rawText) => onOcrText('insuranceBack', rawText)}
             onFileSelected={(b64, mime) => onFileUploaded('insuranceBack', { name: 'insurance_back', dataUrl: b64, type: mime })}
           />
         </div>

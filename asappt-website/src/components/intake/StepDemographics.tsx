@@ -2,29 +2,30 @@
 
 import { useFormContext } from 'react-hook-form'
 import { ImageUploadOCR } from './ImageUploadOCR'
-import { parseIdFields } from '@/lib/google-vision-client'
 import { useLanguage } from '@/lib/language-context'
 import { translations } from '@/lib/translations'
 import type { IntakeFormData, UploadedFile } from '@/types/intake'
 
 interface Props {
   onFileUploaded: (key: string, file: UploadedFile) => void
+  onOcrText: (key: string, rawText: string) => void
 }
 
 const states = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
 
-export function StepDemographics({ onFileUploaded }: Props) {
+export function StepDemographics({ onFileUploaded, onOcrText }: Props) {
   const { register, setValue, formState: { errors } } = useFormContext<IntakeFormData>()
   const { lang } = useLanguage()
   const intake = translations[lang].intake
 
-  function handleExtracted(parsedFields: Record<string, string>) {
+  function handleExtracted(parsedFields: Record<string, string>, rawText: string) {
     if (parsedFields.firstName) setValue('demographics.firstName', parsedFields.firstName)
     if (parsedFields.lastName) setValue('demographics.lastName', parsedFields.lastName)
     if (parsedFields.dateOfBirth) setValue('demographics.dateOfBirth', parsedFields.dateOfBirth)
     if (parsedFields.address) setValue('demographics.address', parsedFields.address)
     if (parsedFields.zip) setValue('demographics.zip', parsedFields.zip)
     if (parsedFields.state) setValue('demographics.state', parsedFields.state)
+    onOcrText('idPhoto', rawText)
   }
 
   const fieldClass = 'w-full px-3 py-2.5 text-sm bg-white border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-warm-400 focus:border-transparent placeholder:text-brown-200'
