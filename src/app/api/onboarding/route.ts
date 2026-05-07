@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     try {
       const prompt = buildOnboardingSummaryPrompt(data)
       const message = await anthropic.messages.create({
-        model: 'claude-sonnet-4-6',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 300,
         messages: [{ role: 'user', content: prompt }],
       })

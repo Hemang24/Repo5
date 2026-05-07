@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     const prompt = buildReportPrompt(profile, sessionsWithData, periodLabel)
 
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
+      model: 'claude-3-5-sonnet-20240620',
       max_tokens: 2000,
       messages: [{ role: 'user', content: prompt }],
     })

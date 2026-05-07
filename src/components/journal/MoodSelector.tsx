@@ -1,14 +1,16 @@
 'use client'
 
 const moods = [
-  { score: 1, emoji: '😖', label: 'Rough' },
-  { score: 2, emoji: '😔', label: 'Bad' },
-  { score: 3, emoji: '😕', label: 'Low' },
-  { score: 4, emoji: '😐', label: 'Meh' },
-  { score: 5, emoji: '🙂', label: 'Okay' },
-  { score: 6, emoji: '😊', label: 'Good' },
-  { score: 7, emoji: '😄', label: 'Great' },
-  { score: 8, emoji: '🤩', label: 'Amazing' },
+  { score: 1, emoji: '😫', label: 'Terrible' },
+  { score: 2, emoji: '😖', label: 'Rough' },
+  { score: 3, emoji: '😔', label: 'Bad' },
+  { score: 4, emoji: '😕', label: 'Low' },
+  { score: 5, emoji: '😐', label: 'Meh' },
+  { score: 6, emoji: '🙂', label: 'Okay' },
+  { score: 7, emoji: '😊', label: 'Good' },
+  { score: 8, emoji: '😄', label: 'Great' },
+  { score: 9, emoji: '🤩', label: 'Amazing' },
+  { score: 10, emoji: '🥳', label: 'Ecstatic' },
 ]
 
 interface MoodSelectorProps {
