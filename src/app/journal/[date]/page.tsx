@@ -60,7 +60,7 @@ export default async function EntryDetailPage({ params }: { params: Promise<{ da
             <span className="text-4xl">{getMoodEmoji(session.mood_score)}</span>
             <div>
               <p className="text-slate-400 text-sm">Overall mood</p>
-              <p className="text-slate-100 font-semibold">{getMoodLabel(session.mood_score)} ({session.mood_score}/8)</p>
+              <p className="text-slate-100 font-semibold">{getMoodLabel(session.mood_score)} ({session.mood_score}/10)</p>
             </div>
           </Card>
         )}
