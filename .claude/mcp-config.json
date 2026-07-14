@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "todo-firecrawl": {
+      "command": "node",
+      "args": ["src/mcp-server.js"],
+      "env": {
+        "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}"
+      }
+    }
+  }
+}
